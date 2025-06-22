@@ -4,12 +4,24 @@ import {AiOutlineFacebook, AiOutlineInstagram, AiOutlineMail, AiOutlineMenu, AiO
 import { Link, useLocation } from "react-router-dom";
 import { format } from "utils/format";
 import { ROUTERS } from "utils/router";
+
+
+   export const categories = [
+        "Giày",
+        "Quần áo",
+        "Vợt",
+        "Ba lô",
+        "Phụ kiện",
+    ];
+
+
+
 const Header = () => {
     const location = useLocation();
     const [isHome, setIsHome] = useState(location.pathname.length <= 1); 
     const [isShowCategories, setShowCategories] = useState(isHome);
 
-    const [menus, setmenus] = useState([
+    const [menus] = useState([
         {
                 name: "Trang chủ",
                 path: ROUTERS.USER.HOME,
@@ -47,15 +59,6 @@ const Header = () => {
         },
         
     ]);
-
-    const categories = [
-        "Giày",
-        "Quần áo",
-        "Vợt",
-        "Ba lô",
-        "Phụ kiện",
-
-    ];
 
     useEffect(() => {
         const isHome = location.pathname.length <= 1;

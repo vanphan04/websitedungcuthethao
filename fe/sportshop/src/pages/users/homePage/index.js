@@ -11,9 +11,7 @@ import banner1Img from "assets/users/images/banner/index_banner_10.jpg";
 import banner2Img from "assets/users/images/banner/index_banner_8.jpg";
 import "./style.scss"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import { AiOutlineEye, AiOutlineShoppingCart } from "react-icons/ai";
-import { Link } from "react-router-dom";
-import { format } from "utils/format";
+import { ProductCard } from "component";  
 
 const HomePage = () => {
     const responsive = {
@@ -106,24 +104,11 @@ const HomePage = () => {
         
         const tabPanel= [];
         data[key].products.map((item, j)=>{
-          return tabPanel.push(<div className="col-lg-3" key={j}>
-            <div className="featured__item">
-              <div className="featured__item__pic" style={{backgroundImage:`url(${item.img})`}}>
-                <ul className="featured__item__pic__hover">
-                  <li>
-                    <AiOutlineEye/>
-                  </li>
-                  <li>
-                    <AiOutlineShoppingCart/>
-                  </li>
-                </ul>
-              </div>
-              <div className="featured__item__text">
-                <h6><Link to="">{item.name}</Link></h6>
-                <h5>{format(item.price)}</h5>
-              </div>
-            </div>
-          </div>);
+          return tabPanel.push(
+          <div className="col-lg-3" key={j}>
+            <ProductCard name={item.name} img={item.img} price={item.price} />
+          </div>
+          );
         });
         tabPanels.push(tabPanel);
       });
