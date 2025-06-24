@@ -3,7 +3,7 @@
 
 .featured__item{
         margin-bottom: 50px;
-        
+        padding: 5px;
         &:hover{
             .featured__item__pic__hover{
                 top: 80% !important;
@@ -12,11 +12,18 @@
 
 
         .featured__item__pic{
+            border: 1px solid #ccc;
             height: 270px;
             position: relative;
             overflow: hidden;
             background-position: center;
             padding: 5px;
+
+            img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+            }
             
             .featured__item__pic__hover{
                 position: absolute;

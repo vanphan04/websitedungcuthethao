@@ -4,7 +4,7 @@ import "./style.scss"
 import { Link } from "react-router-dom";
 import { categories } from "../theme/header";
 import { ROUTERS } from "utils/router";
-import feature1Img from "assets/users/images/featured/giày.jpg";
+import feature1Img from "assets/users/images/featured/giay.jpg";
 import { ProductCard } from "component";
 
 const ProfilePage = () => {
