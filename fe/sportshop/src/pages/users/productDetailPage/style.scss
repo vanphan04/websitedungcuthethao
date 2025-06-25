@@ -1,35 +1,53 @@
 @use "sass:map";
 @import "styles/pages/theme";
 
-.product__detail__pic{
+.product__detail__pic {
+  display: flex;
+  column-gap: 10px;
+
+  img {
+    border-radius: 6px;
+  }
+
+  > img {
+    flex: 0 0 65%;
+    width: 100%;
+    height: 400px; // hoặc chiều cao bạn mong muốn
+    object-fit: cover;
+  }
+
+  .main {
+    flex: 0 0 35%;
     display: flex;
-    column-gap: 10px;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: flex-start;
 
-    img{
-        flex: 0 0 65%;
-        object-fit: cover;
+    img {
+      width: 100%;
+      height: 120px; // hoặc auto tùy theo thiết kế
+      object-fit: cover;
+      border: 1px solid #eee;
+      cursor: pointer;
+      transition: transform 0.3s;
+
+      &:hover {
+        transform: scale(1.05);
+      }
     }
-
-    .main{
-        flex: 0 0 35%;
-        display: grid;
-        align-items: stretch;
-
-        img{
-            width: 60%;
-            object-fit: cover;
-
-            &:not(:first-child){
-                padding-top: 5px;
-            }
-        }
-    }
+  }
 }
+
 
 .product__detail__text{
     h2{
         color: #252525;
         font-weight: 700;
+    }
+
+    h3{
+        color: red;
+        margin-top: 10px;
     }
     
     .seen-icon{

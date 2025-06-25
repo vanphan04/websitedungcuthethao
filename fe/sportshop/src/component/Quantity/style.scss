@@ -9,6 +9,12 @@
     .quantity{
         display: flex;
         align-items: center;
+        
+        .total-price {
+        margin: 8px 0 12px;
+        font-size: 16px;
+        color: #333;
+        }
 
         span{
             display: flex;
