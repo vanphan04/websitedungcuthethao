@@ -55,7 +55,7 @@
     padding: 30px;
     padding-top: 20px;
     margin-top: 50px;
-
+    
     ul li{
         list-style: none;
         display: flex;
@@ -64,7 +64,10 @@
 
         button{
             width: 100%;
-            
         }
+    }
+
+    .button-submit{
+        width: 100%;
     }
 }

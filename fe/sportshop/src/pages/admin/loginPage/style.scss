@@ -1,0 +1,58 @@
+@use "sass:map";
+@import "styles/pages/all";
+
+.login {
+    input{
+        width: calc(100% - 10px);
+    }
+
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f7f8fa;
+
+    &__container{
+        background: #ffff;
+        padding: 32px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+    }
+
+    &__tittle{
+        font-weight: 600;
+        color: map.get($theme-colors, "normal-text");
+        margin-bottom: 20px;
+
+    }
+
+    &__form{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    &__form-group{
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__label{
+        font-size: 14px;
+        font-weight: 500;
+        color: map.get($theme-colors, "normal-text");
+    }
+
+    &__btn{
+        height: 46px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #ffffff;
+        background: map.get($theme-colors, "main");
+        border-radius: 4px;
+        cursor: pointer;
+    }
+}
+
