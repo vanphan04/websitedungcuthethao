@@ -1,63 +1,97 @@
 @use "sass:map";
 @import "styles/pages/all";
 
-.orders {
-    background: #fff;
-    border-radius: 8px;
-
-    h2{
-        margin-bottom: 30px;
-        color: map.get($theme-colors, "normal-text");
-    }
-
-    &__table{
-        width: 100%;
-        border-radius: collapse ;
-        margin-bottom: 10px;
-
-        th,td{
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        
-    }
-
-    &__pagination{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-
-    &__page-number{
-        display: flex;
-        gap: 4px;
-    }
-
-    &__page-btn {
-        height: 36px;
-        min-width: 36px;
-        padding: 0 12px;
-        font-size: 14px;
-        color: map.get($theme-colors, "normal-text");
-        background: #ffff;
-        border: 1px solid #ebebeb;
-        border-radius: 20px;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-
-        &:hover:not(&--active){
-            color: #ffff;
-            background: map.get($theme-colors, "main");
-        }
-        
-        &--active{
-            color: #ffff;
-            background: map.get($theme-colors, "main");
-            border-color:map.get($theme-colors, "main"); ;
-        }
-    }
+.orders__table select {
+  border: none;             // bỏ viền
+  background: transparent;  // nền trong suốt hoặc màu bạn muốn
+  outline: none;            // bỏ viền focus mặc định
+  font-size: 14px;
+  padding: 4px 8px;
+  cursor: pointer;
 }
 
+.orders {
+  background: #fff;
+  border-radius: 8px;
+
+  h2 {
+    margin-bottom: 30px;
+    color: map.get($theme-colors, "normal-text");
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;  // sửa lỗi cú pháp
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: map.get($theme-colors, "normal-text");
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 12px 15px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    thead {
+      background-color: map.get($theme-colors, "main");
+      color: #fff;
+      font-weight: 700;
+    }
+
+   
+
+    button {
+      background-color: map.get($theme-colors, "main");
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: darken(map.get($theme-colors, "main"), 10%);
+      }
+    }
+  }
+
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  &__page-number {
+    display: flex;
+    gap: 4px;
+  }
+
+  &__page-btn {
+    height: 36px;
+    min-width: 36px;
+    padding: 0 12px;
+    font-size: 14px;
+    color: map.get($theme-colors, "normal-text");
+    background: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover:not(&--active) {
+      color: #fff;
+      background: map.get($theme-colors, "main");
+    }
+
+    &--active {
+      color: #fff;
+      background: map.get($theme-colors, "main");
+      border-color: map.get($theme-colors, "main");
+    }
+  }
+}

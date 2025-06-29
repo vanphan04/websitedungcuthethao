@@ -26,7 +26,7 @@ const Quantity = ({
         item.id === productId ? { ...item, quantity: newQty } : item
       );
       localStorage.setItem("cart", JSON.stringify(updatedCart));
-      window.dispatchEvent(new Event("storage")); // 👈 Thêm nếu trong giỏ hàng
+      window.dispatchEvent(new Event("storage")); // Cập nhật các component lắng nghe
     }
 
     if (onQuantityChange) {
@@ -37,9 +37,9 @@ const Quantity = ({
   const handleAddToCart = () => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    const existingItem = cart.find((item) => item.id === productId);
-    if (existingItem) {
-      existingItem.quantity += qty;
+    const existingItemIndex = cart.findIndex((item) => item.id === productId);
+    if (existingItemIndex >= 0) {
+      cart[existingItemIndex].quantity += qty;
     } else {
       cart.push({
         id: productId,
@@ -52,9 +52,7 @@ const Quantity = ({
 
     localStorage.setItem("cart", JSON.stringify(cart));
     alert("Đã thêm vào giỏ hàng!");
-
-    // 👇 Gửi sự kiện để các component khác như Header cập nhật
-    window.dispatchEvent(new Event("storage"));
+    window.dispatchEvent(new Event("storage")); // Cho Header hoặc Giỏ hàng cập nhật
   };
 
   return (
