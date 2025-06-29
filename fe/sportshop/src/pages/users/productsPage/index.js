@@ -7,10 +7,14 @@ import { categories } from "../theme/header";
 import "./style.scss";
 
 const ProductsPage = () => {
-  const sorts = ["Giảm dần", "Tăng dần", "Mới nhất", "Cũ nhất", "Bán chạy", "Giảm giá"];
-  const { madm, maloai } = useParams(); // 👈 lấy thêm maloai
+  const sorts = ["Giảm dần", "Tăng dần", "Mới nhất", "Cũ nhất"];
+  const { madm, maloai } = useParams();
   const location = useLocation();
-  const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [selectedSort, setSelectedSort] = useState("Giảm dần");
 
   const queryParams = new URLSearchParams(location.search);
   const keyword = queryParams.get("keyword");
@@ -21,24 +25,55 @@ const ProductsPage = () => {
         let endpoint = "";
 
         if (keyword) {
-          endpoint = `http://localhost:3001/api/sanpham/timkiem?keyword=${encodeURIComponent(keyword)}`;
+          endpoint = `http://localhost:3001/api/sanpham/timkiem?keyword=${encodeURIComponent(
+            keyword
+          )}`;
         } else if (madm) {
           endpoint = `http://localhost:3001/api/sanpham/danhmuc/${madm}`;
         } else if (maloai) {
-          endpoint = `http://localhost:3001/api/sanpham/loai/${maloai}`; // 👈 gọi theo loại
+          endpoint = `http://localhost:3001/api/sanpham/loai/${maloai}`;
         } else {
           endpoint = `http://localhost:3001/api/sanpham`;
         }
 
         const res = await axios.get(endpoint);
-        setProducts(res.data);
+        setAllProducts(res.data);
+        setFilteredProducts(res.data);
       } catch (error) {
         console.error("Lỗi tải sản phẩm:", error);
       }
     };
 
     fetchProducts();
-  }, [madm, maloai, keyword]); // 👈 thêm maloai vào dependency
+  }, [madm, maloai, keyword]);
+
+  const handleFilterPrice = () => {
+    let result = allProducts;
+
+    if (minPrice !== "") {
+      result = result.filter((sp) => sp.gia >= parseInt(minPrice));
+    }
+    if (maxPrice !== "") {
+      result = result.filter((sp) => sp.gia <= parseInt(maxPrice));
+    }
+
+    setFilteredProducts(result);
+  };
+
+  const sortProducts = (list) => {
+    switch (selectedSort) {
+      case "Giảm dần":
+        return list.slice().sort((a, b) => b.gia - a.gia);
+      case "Tăng dần":
+        return list.slice().sort((a, b) => a.gia - b.gia);
+      case "Mới nhất":
+        return list.slice().sort((a, b) => b.masp - a.masp);
+      case "Cũ nhất":
+        return list.slice().sort((a, b) => a.masp - b.masp);
+      default:
+        return list;
+    }
+  };
 
   return (
     <>
@@ -50,24 +85,57 @@ const ProductsPage = () => {
               <div className="sidebar__item">
                 <h2>Mức giá</h2>
                 <div className="price-range-wrap">
-                  <div><p>Từ:</p><input type="number" min={0} disabled /></div>
-                  <div><p>Đến:</p><input type="number" min={0} disabled /></div>
+                  <div>
+                    <p>Từ:</p>
+                    <input
+                      type="number"
+                      min={0}
+                      value={minPrice}
+                      onChange={(e) => setMinPrice(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <p>Đến:</p>
+                    <input
+                      type="number"
+                      min={0}
+                      value={maxPrice}
+                      onChange={(e) => setMaxPrice(e.target.value)}
+                    />
+                  </div>
+                  <button className="btn_loc" onClick={handleFilterPrice}>
+                    Lọc
+                  </button>
                 </div>
               </div>
+
               <div className="sidebar__item">
                 <h2>Sắp xếp</h2>
                 <div className="tags">
                   {sorts.map((item, key) => (
-                    <div className={`tag ${key === 0 ? "active" : ""}`} key={key}>{item}</div>
+                    <div
+                      className={`tag ${selectedSort === item ? "active" : ""}`}
+                      key={key}
+                      onClick={() => setSelectedSort(item)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {item}
+                    </div>
                   ))}
                 </div>
               </div>
+
               <div className="sidebar__item">
                 <h2>Thể loại khác</h2>
                 <ul>
                   {categories.map((cat, key) => (
                     <li key={key}>
-                      <Link to={`/san-pham/danh-muc/${cat.madm}`}>{cat.tendm}</Link>
+                      <Link
+                        to={`/san-pham/danh-muc/${cat.madm}`}
+                        className={madm === String(cat.madm) ? "active" : ""}
+                      >
+                        {cat.tendm}
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -77,8 +145,8 @@ const ProductsPage = () => {
 
           <div className="col-lg-9">
             <div className="row">
-              {products.length > 0 ? (
-                products.map((item) => (
+              {sortProducts(filteredProducts).length > 0 ? (
+                sortProducts(filteredProducts).map((item) => (
                   <div className="col-lg-4" key={item.masp}>
                     <ProductCard
                       id={item.masp}

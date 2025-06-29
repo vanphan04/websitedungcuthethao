@@ -1,60 +1,89 @@
 @use "sass:map";
 @import "styles/pages/theme";
 
-.container{
-    padding: 30px 0;
+.container {
+  padding: 30px 0;
 
-    .sidebar{
-        padding-right: 20px;
+  .sidebar {
+    padding-right: 20px;
 
-        .sidebar__item{
-            margin-bottom: 20px;
-
-            h2{
-                color: rbg(28, 28, 28);
-                font-weight: 700;
-                margin-bottom: 10px;
-            }
-
-            .price-range-wrap{
-                display: flex;
-                flex-direction: column;
-                row-gap: 10px;
-            }
-
-            .tags{
-                display: flex;
-                gap: 10px;
-                flex-wrap: wrap;
-
-                .tag{
-                    font-size: 12px;
-                    color: #6f6f6f;
-                    display: inline-block;
-                    padding: 8px 25px 6px ;
-                    cursor: pointer;
-                    background: #f5f5f5;
-                    margin-bottom: 0;
-
-                    &:hover, &:active{
-                        background: map.get($theme-colors, "main");
-                        color: #ffffff;
-                    }
-                }
-            }
-
-            ul li{
-                list-style: none;
-                a{
-                    text-decoration: none;
-                    line-height: 30px;
-                    color: map.get($theme-colors, "normal-text");
-
-                    &:hover{
-                        color: map.get($theme-colors, "main");
-                    }
-                }
-            }
-        }
+    .btn_loc {
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: 800;
+      text-transform: uppercase;
+      display: inline-block;
+      padding: 16px 30px 17px;
+      background: map.get($theme-colors, "main");
+      border: none;
+      height: 50px;
     }
+
+    .sidebar__item {
+      margin-bottom: 20px;
+      .tag.active {
+        background-color: map.get($theme-colors, "main") !important;
+        color: white !important;
+      }
+
+      h2 {
+        color: rbg(28, 28, 28);
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .price-range-wrap {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+      }
+
+      .tags {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+
+        .tag {
+          font-size: 12px;
+          color: #6f6f6f;
+          display: inline-block;
+          padding: 8px 25px 6px;
+          cursor: pointer;
+          background: #f5f5f5;
+          margin-bottom: 0;
+
+          &:hover,
+          &:active {
+            background: map.get($theme-colors, "main");
+            color: #ffffff;
+          }
+        }
+      }
+
+      ul li {
+        list-style: none;
+
+        a {
+          text-decoration: none;
+          line-height: 30px;
+          color: map.get($theme-colors, "normal-text");
+
+          &:hover {
+            color: map.get($theme-colors, "main");
+          }
+
+          &.active {
+            font-weight: bold;
+            color: map.get($theme-colors, "main");
+            position: relative;
+
+            &::before {
+              color: map.get($theme-colors, "main");
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
 }
