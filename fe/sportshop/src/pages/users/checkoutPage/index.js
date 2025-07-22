@@ -3,7 +3,7 @@ import axios from "axios";
 import { format } from "utils/format";
 import Breadcrumb from "../theme/breadcrumb";
 import "./style.scss";
-import ReactLoading from "react-loading";
+import { ClipLoader } from "react-spinners";
 
 const CheckoutPage = () => {
   const [cart, setCart] = useState([]);
@@ -12,7 +12,7 @@ const CheckoutPage = () => {
     sdt: "",
     email: "",
     diachi: "",
-    ghichu: "", // Ghi chú có thể để trống
+    ghichu: "",
   });
   const [pttt, setPttt] = useState("Tiền mặt");
   const [loading, setLoading] = useState(false);
@@ -59,15 +59,21 @@ const CheckoutPage = () => {
     if (!validate()) return;
 
     setLoading(true);
+
     try {
-      await axios.post("http://localhost:3001/api/checkout", {
+      const res = await axios.post("http://localhost:3001/api/checkout", {
         ...form,
         cart,
         pttt,
       });
-      alert("Đặt hàng thành công!");
-      localStorage.removeItem("cart");
-      window.location.href = "/";
+
+      if (pttt === "Momo" && res.data.payUrl) {
+        window.location.href = res.data.payUrl;
+      } else {
+        alert("Đặt hàng thành công!");
+        localStorage.removeItem("cart");
+        window.location.href = "/";
+      }
     } catch (err) {
       const msg = err.response?.data?.message || "Lỗi khi đặt hàng!";
       alert(msg);
@@ -103,9 +109,8 @@ const CheckoutPage = () => {
             <div className="checkout__input">
               <label>Phương thức thanh toán:</label>
               <select value={pttt} onChange={(e) => setPttt(e.target.value)}>
-                <option value="Tiền mặt">Tiền mặt</option>
-                <option value="Chuyển khoản">Chuyển khoản</option>
-                <option value="Momo">Momo</option>
+                <option value="Momo">MoMo</option>
+                <option value="Tiền mặt">Thanh toán khi nhận hàng</option>
               </select>
             </div>
             <div className="checkout__input">
@@ -141,7 +146,7 @@ const CheckoutPage = () => {
                 onClick={handleSubmit}
                 disabled={loading}
               >
-                {loading ? <ReactLoading type="spin" height={20} width={20} /> : "Thanh toán"}
+                {loading ? <ClipLoader color="#fff" size={20} /> : "Thanh toán"}
               </button>
             </div>
           </div>

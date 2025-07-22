@@ -33,7 +33,7 @@ const OrderAdPage = () => {
     }
   };
 
-  const statusOptions = ["Đang chuẩn bị", "Đang giao", "Đã giao"];
+  const statusOptions = ["Đang chuẩn bị", "Đang giao", "Đã giao", "Đã hủy"];
 
   return (
     <div className="container">

@@ -8,15 +8,16 @@ import ProductsPage from "./pages/users/productsPage";
 import ProductDetailPage from "./pages/users/productDetailPage";
 import ShoppingcartPage from "pages/users/shoppingcartPage";
 import CheckoutPage from "pages/users/checkoutPage";
-
 import LoginAdPage from "pages/admin/loginPage";
 import MasterAdLayout from "pages/admin/theme/masterAdLayout";
 import OrderAdPage from "pages/admin/orderPage";
 import OrderDetailPage from "pages/admin/OrderDetailPage";
-// Nếu có thêm admin pages như quản lý sản phẩm, loại sản phẩm thì import thêm ở đây
 import ProductAdPage from "pages/admin/productPage";
 import CategoryAdPage from "pages/admin/categoryPage";
 import AddProductPage from "pages/admin/AddProductPage"; // 👈 thêm dòng này
+import DmPage from "pages/admin/dmPage";
+import SizePage from "pages/admin/sizePage";
+import ColorPage from "pages/admin/colorPage";
 
 
 const renderUserRouter = () => {
@@ -94,9 +95,27 @@ const renderAdminRouter = () => {
        component: <CategoryAdPage />,
      },
      {
+       path: ROUTERS.ADMIN.CATEGORIES,
+       component: <CategoryAdPage />,
+     },
+     {
+       path: ROUTERS.ADMIN.ADD_CATEGORY,
+       component: <DmPage />,
+     },
+  
+     {
   path: ROUTERS.ADMIN.ADD_PRODUCT,
   component: <AddProductPage />,
 },
+{
+  path: ROUTERS.ADMIN.SIZE,
+  component: <SizePage />,
+},
+{
+  path: ROUTERS.ADMIN.COLOR,
+  component: <ColorPage />,
+},
+
   ];
 
   return (

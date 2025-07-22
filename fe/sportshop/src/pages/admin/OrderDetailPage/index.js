@@ -14,6 +14,7 @@ const OrderDetailPage = () => {
     const fetchOrderDetail = async () => {
       try {
         const res = await axios.get(`http://localhost:3001/api/hoadon/${id}/chitiet`);
+        console.log("res.data.info:", res.data.info); // 👈 Thêm dòng này
         setOrderInfo(res.data.info);
         setProducts(res.data.items);
       } catch (err) {
@@ -30,6 +31,7 @@ const OrderDetailPage = () => {
     <div className="order-detail-page">
       <h2>Chi tiết đơn hàng #{orderInfo.mahd}</h2>
       <p><b>Khách hàng:</b> {orderInfo.tenkh}</p>
+      <p><b>Địa chỉ:</b> {orderInfo.diachi}</p> 
       <p><b>Ngày đặt:</b> {new Date(orderInfo.ngayxuat).toLocaleDateString()}</p>
       <p><b>Trạng thái:</b> {orderInfo.trangthai}</p>
       <p><b>Phương thức thanh toán:</b> {orderInfo.pttt}</p>
@@ -39,16 +41,20 @@ const OrderDetailPage = () => {
       <table className="order-detail-table">
         <thead>
           <tr>
-            <th>Tên sản phẩm</th>
-            <th>Số lượng</th>
-            <th>Đơn giá</th>
-            <th>Thành tiền</th>
+            <th>TÊN SẢN PHẨM</th>
+            <th>SỐ LƯỢNG</th>
+            <th>ĐƠN GIÁ</th>
+            <th>THÀNH TIỀN</th>
+            <th>MÀU</th>
+      <th>KÍCH CỠ</th>
           </tr>
         </thead>
         <tbody>
           {products.map((sp, i) => (
             <tr key={i}>
               <td>{sp.tensp}</td>
+               <td>{sp.mausac}</td>
+        <td>{sp.kichco}</td>
               <td>{sp.quantity}</td>
               <td>{format(sp.price / sp.quantity)}</td>
               <td>{format(sp.price)}</td>

@@ -7,7 +7,7 @@ import { categories } from "../theme/header";
 import "./style.scss";
 
 const ProductsPage = () => {
-  const sorts = ["Giảm dần", "Tăng dần", "Mới nhất", "Cũ nhất"];
+  const sorts = ["Giảm dần", "Tăng dần"];
   const { madm, maloai } = useParams();
   const location = useLocation();
   const [allProducts, setAllProducts] = useState([]);
@@ -66,10 +66,6 @@ const ProductsPage = () => {
         return list.slice().sort((a, b) => b.gia - a.gia);
       case "Tăng dần":
         return list.slice().sort((a, b) => a.gia - b.gia);
-      case "Mới nhất":
-        return list.slice().sort((a, b) => b.masp - a.masp);
-      case "Cũ nhất":
-        return list.slice().sort((a, b) => a.masp - b.masp);
       default:
         return list;
     }

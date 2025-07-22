@@ -1,21 +1,34 @@
+import axios from "axios";
 import { memo, useState } from "react";
-import "./style.scss";
 import { useNavigate } from "react-router-dom";
 import { ROUTERS } from "utils/router";
+import "./style.scss";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Kiểm tra tài khoản
-    if (username === "admin" && password === "admin123") {
-      navigate(ROUTERS.ADMIN.ORDERS); // chuyển trang nếu đúng
-    } else {
-      alert("Tên đăng nhập hoặc mật khẩu không đúng!");
+    try {
+      await axios.post("http://localhost:3001/api/admin/login", {
+  username,
+  password
+});
+
+
+      alert("Đăng nhập thành công!");
+      // TODO: có thể lưu thông tin vào localStorage nếu cần
+      navigate(ROUTERS.ADMIN.ORDERS);
+    } catch (err) {
+      if (err.response?.status === 401) {
+        alert(err.response.data.error || "Tên đăng nhập hoặc mật khẩu không đúng!");
+      } else {
+        alert("Lỗi hệ thống khi đăng nhập!");
+        console.error("Lỗi đăng nhập:", err);
+      }
     }
   };
 

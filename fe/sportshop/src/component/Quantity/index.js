@@ -8,6 +8,7 @@ const Quantity = ({
   price,
   img,
   quantity = 1,
+   stock = 0,
   onQuantityChange, // optional callback
 }) => {
   const [qty, setQty] = useState(quantity);
@@ -34,26 +35,38 @@ const Quantity = ({
     }
   };
 
-  const handleAddToCart = () => {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const handleAddToCart = () => {
+  if (qty > stock) {
+    alert("Không đủ hàng trong kho");
+    return;
+  }
 
-    const existingItemIndex = cart.findIndex((item) => item.id === productId);
-    if (existingItemIndex >= 0) {
-      cart[existingItemIndex].quantity += qty;
-    } else {
-      cart.push({
-        id: productId,
-        name,
-        price,
-        img,
-        quantity: qty,
-      });
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const existingItemIndex = cart.findIndex((item) => item.id === productId);
+  if (existingItemIndex >= 0) {
+    // Kiểm tra tổng quantity sau cộng dồn
+    const newTotal = cart[existingItemIndex].quantity + qty;
+    if (newTotal > stock) {
+      alert("Không đủ hàng trong kho");
+      return;
     }
+    cart[existingItemIndex].quantity = newTotal;
+  } else {
+    cart.push({
+      id: productId,
+      name,
+      price,
+      img,
+      quantity: qty,
+    });
+  }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Đã thêm vào giỏ hàng!");
-    window.dispatchEvent(new Event("storage")); // Cho Header hoặc Giỏ hàng cập nhật
-  };
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("Đã thêm vào giỏ hàng!");
+  window.dispatchEvent(new Event("storage"));
+};
+
 
   return (
     <div className="quantity-container">

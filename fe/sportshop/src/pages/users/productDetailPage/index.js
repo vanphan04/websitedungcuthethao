@@ -50,11 +50,13 @@ const ProductDetailPage = () => {
             <h3>{format(product.gia)}</h3>
             <p>{product.mota}</p>
             <Quantity
-              productId={product.masp}
-              name={product.tensp}
-              price={product.gia}
-              img={`/images/${product.hinhanh}`}
-            />
+  productId={product.masp}
+  name={product.tensp}
+  price={product.gia}
+  img={`/images/${product.hinhanh}`}
+  stock={product.soluong}
+/>
+
 
             <ul>
               <li>
@@ -64,6 +66,12 @@ const ProductDetailPage = () => {
               <li>
                 <b>Số lượng:</b> <span>{product.soluong}</span>
               </li>
+  <li>
+  <b>Kích cỡ:</b> <span>{product.kichco}</span>
+</li>
+<li>
+  <b>Màu sắc:</b> <span>{product.mausac}</span>
+</li>
               <li>
                 <b>Chia sẻ:</b>{" "}
                 <span>

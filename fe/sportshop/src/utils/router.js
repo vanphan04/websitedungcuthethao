@@ -17,9 +17,12 @@ export const ROUTERS = {
     LOGIN: `${ADMIN_PATH}/dang-nhap`,
     ORDERS: `${ADMIN_PATH}/dat-hang`,
     ORDER_DETAIL: `${ADMIN_PATH}/don-hang/:id`, 
-    PRODUCTS: `${ADMIN_PATH}/san-pham`,       // <-- đây
-    CATEGORIES: `${ADMIN_PATH}/loai-san-pham`, // <-- đây
+    PRODUCTS: `${ADMIN_PATH}/san-pham`,      
+    CATEGORIES: `${ADMIN_PATH}/loai-san-pham`, 
     LOGOUT: `${ADMIN_PATH}/dang-xuat`,
     ADD_PRODUCT: `${ADMIN_PATH}/them-san-pham`,
+    ADD_CATEGORY: `${ADMIN_PATH}/danh-muc`,
+    SIZE: `${ADMIN_PATH}/kich-co`,
+    COLOR: `${ADMIN_PATH}/mau-sac`,
   },
 };

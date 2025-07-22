@@ -22,33 +22,44 @@ const ProductCategoryAdPage = () => {
   };
 
   const handleAddCategory = async () => {
-    if (!newCategoryName.trim()) {
-      alert("Vui lòng nhập tên loại sản phẩm");
-      return;
-    }
+  if (!newCategoryName.trim()) {
+    alert("Vui lòng nhập tên loại sản phẩm");
+    return;
+  }
 
-    try {
-      await axios.post("http://localhost:3001/api/loaisanpham", {
-        tenloai: newCategoryName.trim(),
-      });
-
-      setNewCategoryName("");
-      fetchCategories();
-    } catch (err) {
+  try {
+    await axios.post("http://localhost:3001/api/loaisanpham", {
+      tenloai: newCategoryName.trim(),
+    });
+    setNewCategoryName("");
+    fetchCategories();
+  } catch (err) {
+    if (err.response?.status === 409) {
+      alert("Tên loại sản phẩm đã tồn tại");
+    } else {
       console.error("Lỗi khi thêm loại sản phẩm:", err);
+      alert("Đã xảy ra lỗi khi thêm loại sản phẩm");
     }
-  };
+  }
+};
 
-  const handleDeleteCategory = async (maloai) => {
-    if (!window.confirm("Bạn chắc chắn muốn xóa loại sản phẩm này?")) return;
 
-    try {
-      await axios.delete(`http://localhost:3001/api/loaisanpham/${maloai}`);
-      fetchCategories();
-    } catch (err) {
+ const handleDeleteCategory = async (maloai) => {
+  if (!window.confirm("Bạn chắc chắn muốn xóa loại sản phẩm này?")) return;
+
+  try {
+    await axios.delete(`http://localhost:3001/api/loaisanpham/${maloai}`);
+    fetchCategories();
+  } catch (err) {
+    if (err.response?.status === 400) {
+      alert("Không thể xóa loại sản phẩm vì vẫn còn sản phẩm ");
+    } else {
       console.error("Lỗi khi xóa loại sản phẩm:", err);
+      alert("Đã xảy ra lỗi khi xóa loại sản phẩm");
     }
-  };
+  }
+};
+
 
   // Bắt đầu chỉnh sửa một loại sản phẩm
   const handleEditClick = (maloai, tenloai) => {
@@ -63,24 +74,30 @@ const ProductCategoryAdPage = () => {
   };
 
   // Lưu tên loại sản phẩm đã chỉnh sửa
-  const handleSaveEdit = async (maloai) => {
-    if (!editName.trim()) {
-      alert("Tên loại sản phẩm không được để trống");
-      return;
-    }
+ const handleSaveEdit = async (maloai) => {
+  if (!editName.trim()) {
+    alert("Tên loại sản phẩm không được để trống");
+    return;
+  }
 
-    try {
-      await axios.put(`http://localhost:3001/api/loaisanpham/${maloai}`, {
-        tenloai: editName.trim(),
-      });
+  try {
+    await axios.put(`http://localhost:3001/api/loaisanpham/${maloai}`, {
+      tenloai: editName.trim(),
+    });
 
-      setEditId(null);
-      setEditName("");
-      fetchCategories();
-    } catch (err) {
+    setEditId(null);
+    setEditName("");
+    fetchCategories();
+  } catch (err) {
+    if (err.response?.status === 409) {
+      alert("Tên loại sản phẩm đã tồn tại");
+    } else {
       console.error("Lỗi khi cập nhật loại sản phẩm:", err);
+      alert("Đã xảy ra lỗi khi cập nhật loại sản phẩm");
     }
-  };
+  }
+};
+
 
   return (
     <div className="product-page">

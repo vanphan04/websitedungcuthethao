@@ -69,7 +69,7 @@ const AddProductPage = () => {
         madm: parseInt(madm),
       });
       alert("Thêm sản phẩm thành công!");
-      navigate("/admin/products");
+      navigate("/quan-tri/san-pham");
     } catch (error) {
       console.error("Lỗi thêm sản phẩm:", error);
       alert("Có lỗi xảy ra khi thêm sản phẩm.");
