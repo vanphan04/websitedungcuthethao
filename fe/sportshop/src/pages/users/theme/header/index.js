@@ -1,8 +1,6 @@
 import axios from "axios";
 import { memo, useEffect, useState } from "react";
 import {
-  AiOutlineFacebook,
-  AiOutlineInstagram,
   AiOutlineMail,
   AiOutlineMenu,
   AiOutlinePhone,
@@ -13,15 +11,6 @@ import { format } from "utils/format";
 import { ROUTERS } from "utils/router";
 import "./style.scss";
 
-// Danh mục sản phẩm
-export const categories = [
-  { madm: 1, tendm: "Giày" },
-  { madm: 6, tendm: "Quần áo" },
-  { madm: 7, tendm: "Vợt" },
-  { madm: 8, tendm: "Ba lô" },
-  { madm: 9, tendm: "Phụ Kiện" },
-];
-
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -30,18 +19,21 @@ const Header = () => {
   const [cartTotal, setCartTotal] = useState(0);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [loaiSanPham, setLoaiSanPham] = useState([]);
+  const [danhMucSanPham, setDanhMucSanPham] = useState([]);
 
   const [menus] = useState([
-    { name: "Trang chủ", path: ROUTERS.USER.HOME },
+    { name: "Trang chủ" , path: ROUTERS.USER.HOME},
     {
       name: "Sản phẩm",
       path: "",
       isShowSubmenu: false,
-      child: [], // <-- sẽ render động
+      child: [],
+      style: { width: "100%", display: "flex", flexWrap: "wrap", color: "#000" },
     },
-    { name: "Sản phẩm mới", path: "" },
+    { name: "Đơn hàng", path: ROUTERS.USER.TRACK_ORDER },
     { name: "Tin tức", path: "" },
     { name: "Liên hệ", path: "" },
+    { name: "ABOUT", path: ROUTERS.USER.ABOUT },
   ]);
 
   const [cartCount, setCartCount] = useState(0);
@@ -86,6 +78,19 @@ const Header = () => {
     fetchLoaiSanPham();
   }, []);
 
+  // ✅ Gọi API lấy danh mục sản phẩm
+  useEffect(() => {
+    const fetchDanhMuc = async () => {
+      try {
+        const res = await axios.get("http://localhost:3001/api/danhmuc");
+        setDanhMucSanPham(res.data);
+      } catch (err) {
+        console.error("Lỗi tải danh mục sản phẩm: ", err);
+      }
+    };
+    fetchDanhMuc();
+  }, []);
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchKeyword.trim() !== "") {
@@ -109,18 +114,8 @@ const Header = () => {
             </div>
             <div className="col-6 header__top_right">
               <ul>
-                <li>
-                  <Link to={""}>
-                    <AiOutlineFacebook />
-                  </Link>
-                </li>
-                <li>
-                  <Link to={""}>
-                    <AiOutlineInstagram />
-                  </Link>
-                </li>
                 <li onClick={() => navigate(ROUTERS.ADMIN.LOGIN)}>
-                    <span>Đăng nhập</span>                 
+                  <span>Đăng nhập</span>
                 </li>
               </ul>
             </div>
@@ -188,7 +183,7 @@ const Header = () => {
               Danh sách sản phẩm
             </div>
             <ul className={isShowCategories ? "" : "hidden"}>
-              {categories.map((cat, key) => (
+              {danhMucSanPham.map((cat, key) => (
                 <li key={key}>
                   <Link to={`/san-pham/danh-muc/${cat.madm}`}>{cat.tendm}</Link>
                 </li>

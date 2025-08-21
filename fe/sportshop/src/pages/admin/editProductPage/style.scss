@@ -1,0 +1,113 @@
+@use "sass:map";
+@import "styles/pages/theme";
+
+.add-product-page {
+  padding: 30px 0;
+
+  .form-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+
+    button {
+      border: none;
+      background-color: transparent;
+      border: 1px solid map.get($theme-colors, "main");
+      color: map.get($theme-colors, "main");
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: map.get($theme-colors, "main");
+        color: #fff;
+      }
+    }
+  }
+
+  .option {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    justify-content: center;
+    align-items: center;
+
+    select {
+      border: none;
+      background: transparent;
+      border-bottom: 1px solid #ccc;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+
+      &:focus {
+        border-color: map.get($theme-colors, "main");
+        outline: none;
+      }
+    }
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: map.get($theme-colors, "main");
+    margin-bottom: 20px;
+  }
+
+  .add-product-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: map.get($theme-colors, "normal-text");
+    }
+
+    input,
+    textarea,
+    select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      width: 100%;
+
+      &:focus {
+        border-color: map.get($theme-colors, "main");
+        outline: none;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .btn-submit {
+      margin-top: 10px;
+      background-color: map.get($theme-colors, "main");
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      align-self: flex-start;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}

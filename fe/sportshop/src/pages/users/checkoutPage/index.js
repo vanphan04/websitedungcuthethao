@@ -23,9 +23,15 @@ const CheckoutPage = () => {
   }, []);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const shippingFee = total < 300000 ? 30000 : 0;
+  const totalAmount = total + shippingFee;
 
   const handleInput = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleChange = (e) => {
+    setPttt(e.target.value);
   };
 
   const validate = () => {
@@ -51,6 +57,13 @@ const CheckoutPage = () => {
       return false;
     }
 
+    for (const item of cart) {
+      if (!item.color) {
+        alert(`Thiếu mã màu cho sản phẩm "${item.name}"`);
+        return false;
+      }
+    }
+
     return true;
   };
 
@@ -61,13 +74,26 @@ const CheckoutPage = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:3001/api/checkout", {
+      const cartForBackend = cart.map((item) => ({
+        masp: item.id,
+        mamau: item.color,
+        soluong: item.quantity,
+        gia: item.price,
+      }));
+
+      const apiUrl =
+        pttt === "MoMo"
+          ? "http://localhost:3001/api/momo/checkout"
+          : "http://localhost:3001/api/checkout";
+
+      const res = await axios.post(apiUrl, {
         ...form,
-        cart,
+        cart: cartForBackend,
         pttt,
+        tongtien: totalAmount,
       });
 
-      if (pttt === "Momo" && res.data.payUrl) {
+      if (pttt === "MoMo" && res.data.payUrl) {
         window.location.href = res.data.payUrl;
       } else {
         alert("Đặt hàng thành công!");
@@ -87,6 +113,7 @@ const CheckoutPage = () => {
       <Breadcrumb name="Thanh toán" />
       <div className="container">
         <div className="row">
+          {/* Thông tin khách hàng */}
           <div className="col-lg-6">
             <div className="checkout__input">
               <label>Họ và tên:</label>
@@ -108,10 +135,28 @@ const CheckoutPage = () => {
             </div>
             <div className="checkout__input">
               <label>Phương thức thanh toán:</label>
-              <select value={pttt} onChange={(e) => setPttt(e.target.value)}>
-                <option value="Momo">MoMo</option>
-                <option value="Tiền mặt">Thanh toán khi nhận hàng</option>
-              </select>
+              <div className="checkout-pttt">
+                <label>
+                  <input
+                    type="radio"
+                    name="pttt"
+                    value="Tiền mặt"
+                    checked={pttt === "Tiền mặt"}
+                    onChange={handleChange}
+                  />
+                  Tiền mặt
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="pttt"
+                    value="MoMo"
+                    checked={pttt === "MoMo"}
+                    onChange={handleChange}
+                  />
+                  MoMo
+                </label>
+              </div>
             </div>
             <div className="checkout__input">
               <label>Ghi chú:</label>
@@ -125,19 +170,30 @@ const CheckoutPage = () => {
             </div>
           </div>
 
+          {/* Thông tin đơn hàng */}
           <div className="col-lg-6">
             <div className="checkout__order">
               <h3>Đơn hàng</h3>
               <ul>
                 {cart.map((item) => (
-                  <li key={item.id}>
-                    <span>{item.name}</span>
+                  <li key={`${item.id}-${item.color}`}>
+                    <span>
+                      {item.name} – Màu: <b>{item.colorName}</b>
+                    </span>
                     <b>{format(item.price)} ({item.quantity})</b>
                   </li>
                 ))}
                 <li className="checkout__order__subtotal">
-                  <h3>Tổng đơn</h3>
+                  <span>Tạm tính</span>
                   <b>{format(total)}</b>
+                </li>
+                <li>
+                  <span>Phí vận chuyển</span>
+                  <b>{format(shippingFee)}</b>
+                </li>
+                <li className="checkout__order__subtotal">
+                  <h3>Tổng đơn</h3>
+                  <b>{format(totalAmount)}</b>
                 </li>
               </ul>
               <button

@@ -1,7 +1,7 @@
 import { useEffect, useState, memo } from "react";
 import axios from "axios";
-import "../dmPage/style.scss";
-import HeaderAd from "../theme/header";
+import "./style.scss";
+
 
 const ColorPage = () => {
   const [colors, setColors] = useState([]);

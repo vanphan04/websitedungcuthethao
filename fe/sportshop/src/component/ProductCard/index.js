@@ -14,12 +14,15 @@ const ProductCard = ({ id, img, name, price }) => {
       existingItem.quantity += 1;
     } else {
       cart.push({
-        id,
-        name,
-        price,
-        img,
-        quantity: 1,
-      });
+  id,
+  name,
+  price,
+  img,
+  quantity: 1,
+  color: "1",            
+  colorName: "Trắng",    
+});
+
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -37,9 +40,6 @@ const ProductCard = ({ id, img, name, price }) => {
             <Link to={generatePath(ROUTERS.USER.PRODUCT, { id })}>
               <AiOutlineEye />
             </Link>
-          </li>
-          <li onClick={handleAddToCart}>
-            <AiOutlineShoppingCart />
           </li>
         </ul>
       </div>

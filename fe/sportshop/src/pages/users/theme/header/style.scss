@@ -29,7 +29,7 @@ $bannerImg: "/assets/users/images/hero/banner.jpg";
             top: 1px;
             height: 20px;
             width: 1px;
-            background: #000000;
+            background: red;
             opacity: 0.1;
             content: "";
         } 
@@ -73,7 +73,7 @@ $bannerImg: "/assets/users/images/hero/banner.jpg";
 
 .header__menu{
     padding: 24px 0;
-
+    
     ul{
         display: flex;
         justify-content: space-between;
@@ -91,9 +91,10 @@ $bannerImg: "/assets/users/images/hero/banner.jpg";
                 padding: 5px 0;
                 display: block;
             }
+            
         }
         .active a {
-             color: map.get($theme-colors, "main");
+             color: map.get($theme-colors, "normal-text");
         }
 
         li:hover .header__menu__dropdown{

@@ -5,7 +5,6 @@
     AiOutlineAppstore,
     AiOutlineTags,
     AiOutlineDatabase,
-    AiOutlineColumnHeight,
     AiOutlineBgColors,
   } from "react-icons/ai";
   import { useLocation, useNavigate } from "react-router-dom";
@@ -41,25 +40,24 @@
       label: "Danh mục", // <-- Bạn có thể đổi thành "Quản lý danh mục"
       icon: <AiOutlineDatabase />,
     },
-     {
-      path: ROUTERS.ADMIN.SIZE,
-      onClick: () => navigate(ROUTERS.ADMIN.SIZE),
-      label: "Kích cỡ",
-      icon: <AiOutlineColumnHeight />,
-    },
     {
       path: ROUTERS.ADMIN.COLOR,
       onClick: () => navigate(ROUTERS.ADMIN.COLOR),
       label: "Màu sắc",
       icon: <AiOutlineBgColors />,
     },
-    
+    {
+  path: ROUTERS.ADMIN.INVENTORY,
+  onClick: () => navigate(ROUTERS.ADMIN.INVENTORY),
+  label: "Kho hàng",
+  icon: <AiOutlineDatabase />,
+},
     
       {
     path: ROUTERS.ADMIN.LOGOUT,
     onClick: () => {
-      localStorage.removeItem("adminName"); // hoặc adminToken nếu có
-      navigate("/admin/login");
+      localStorage.removeItem("adminName");
+      navigate("");
     },
     
     label: "Đăng xuất",

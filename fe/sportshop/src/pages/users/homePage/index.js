@@ -3,9 +3,8 @@ import { memo, useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
-import cat2Img from "assets/users/images/categories/ao.jpg";
 import cat4Img from "assets/users/images/categories/balo.jpg";
-import cat1Img from "assets/users/images/categories/giay.png";
+import cat1Img from "assets/users/images/categories/5.jpg";
 import cat5Img from "assets/users/images/categories/phukien.jpg";
 import cat3Img from "assets/users/images/categories/vot.jpg";
 
@@ -39,11 +38,11 @@ const HomePage = () => {
   };
 
   const sliderItems = [
-    { bgImg: cat1Img, name: "Giày" },
-    { bgImg: cat2Img, name: "Quần áo" },
+    { bgImg: cat1Img, name: "Túi" },
+    { bgImg: cat5Img, name: "Phụ kiện" },
     { bgImg: cat3Img, name: "Vợt" },
     { bgImg: cat4Img, name: "Ba lô" },
-    { bgImg: cat5Img, name: "Phụ kiện" },
+   
   ];
 
   useEffect(() => {
@@ -51,10 +50,10 @@ const HomePage = () => {
       .get("http://localhost:3001/api/sanpham")
       .then((res) => {
         const mapped = res.data.map((sp) => ({
-          id: sp.masp, // 👈 dùng cho chi tiết sản phẩm
+          id: sp.masp, 
           name: sp.tensp,
           price: sp.gia,
-          img: `/images/${sp.hinhanh}`, // ảnh từ thư mục public/images
+          img: `/images/${sp.hinhanh}`, 
         }));
         setProductData(mapped);
       })
@@ -103,7 +102,7 @@ const HomePage = () => {
       <div className="container">
         <div className="featured">
           <div className="section-tittle">
-            <h2>Sản phẩm nổi bật</h2>
+            <h2>Một số sản phẩm</h2>
           </div>
           {renderFeaturedProducts()}
         </div>

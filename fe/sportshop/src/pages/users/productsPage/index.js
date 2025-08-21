@@ -3,7 +3,6 @@ import { ProductCard } from "component";
 import { memo, useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import Breadcrumb from "../theme/breadcrumb";
-import { categories } from "../theme/header";
 import "./style.scss";
 
 const ProductsPage = () => {
@@ -16,9 +15,12 @@ const ProductsPage = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const [selectedSort, setSelectedSort] = useState("Giảm dần");
 
+  const [danhMucList, setDanhMucList] = useState([]);
+
   const queryParams = new URLSearchParams(location.search);
   const keyword = queryParams.get("keyword");
 
+  // Lấy sản phẩm theo keyword, madm, maloai
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -46,6 +48,20 @@ const ProductsPage = () => {
 
     fetchProducts();
   }, [madm, maloai, keyword]);
+
+  // Gọi API danh mục sản phẩm
+  useEffect(() => {
+    const fetchDanhMuc = async () => {
+      try {
+        const res = await axios.get("http://localhost:3001/api/danhmuc");
+        setDanhMucList(res.data);
+      } catch (error) {
+        console.error("Lỗi tải danh mục:", error);
+      }
+    };
+
+    fetchDanhMuc();
+  }, []);
 
   const handleFilterPrice = () => {
     let result = allProducts;
@@ -124,7 +140,7 @@ const ProductsPage = () => {
               <div className="sidebar__item">
                 <h2>Thể loại khác</h2>
                 <ul>
-                  {categories.map((cat, key) => (
+                  {danhMucList.map((cat, key) => (
                     <li key={key}>
                       <Link
                         to={`/san-pham/danh-muc/${cat.madm}`}

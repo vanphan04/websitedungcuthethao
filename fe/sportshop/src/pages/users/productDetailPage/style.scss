@@ -12,7 +12,7 @@
   > img {
     flex: 0 0 65%;
     width: 100%;
-    height: 400px; // hoặc chiều cao bạn mong muốn
+    height: 400px; 
     object-fit: cover;
   }
 
@@ -25,7 +25,7 @@
 
     img {
       width: 100%;
-      height: 120px; // hoặc auto tùy theo thiết kế
+      height: 120px; 
       object-fit: cover;
       border: 1px solid #eee;
       cursor: pointer;

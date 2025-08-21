@@ -16,21 +16,21 @@ const ShoppingCartPage = () => {
     setCartItems(storedCart);
   }, []);
 
-  // ✅ Xóa sản phẩm
-  const handleRemoveItem = (id) => {
-    const newCart = cartItems.filter((item) => item.id !== id);
-    setCartItems(newCart);
-    localStorage.setItem("cart", JSON.stringify(newCart));
-  };
+  // ✅ Xóa sản phẩm theo id + mamau
+const handleRemoveItem = (id, color) => {
+  const newCart = cartItems.filter((item) => !(item.id === id && item.color === color));
+  setCartItems(newCart);
+  localStorage.setItem("cart", JSON.stringify(newCart));
+};
 
-  // ✅ Cập nhật số lượng
-  const handleQuantityChange = (id, newQty) => {
-    const updated = cartItems.map((item) =>
-      item.id === id ? { ...item, quantity: newQty } : item
-    );
-    setCartItems(updated);
-    localStorage.setItem("cart", JSON.stringify(updated));
-  };
+const handleQuantityChange = (id, color, newQty) => {
+  const updated = cartItems.map((item) =>
+    item.id === id && item.color === color ? { ...item, quantity: newQty } : item
+  );
+  setCartItems(updated);
+  localStorage.setItem("cart", JSON.stringify(updated));
+};
+
 
   const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -44,6 +44,7 @@ const ShoppingCartPage = () => {
             <thead>
               <tr>
                 <th>Tên</th>
+                <th>Màu</th>
                 <th>Giá</th>
                 <th>Số lượng</th>
                 <th>Thành tiền</th>
@@ -51,30 +52,37 @@ const ShoppingCartPage = () => {
               </tr>
             </thead>
             <tbody>
-              {cartItems.map((item) => (
-                <tr key={item.id}>
-                  <td className="shopping__cart__item">
-                    <img src={item.img} alt={item.name} />
-                    <h4>{item.name}</h4>
-                  </td>
-                  <td>{format(item.price)}</td>
-                  <td>
-                    <Quantity
-                      quantity={item.quantity}
-                      hasAddToCart={false}
-                      productId={item.id}
-                      onQuantityChange={(newQty) =>
-                        handleQuantityChange(item.id, newQty)
-                      }
-                    />
-                  </td>
-                  <td>{format(item.price * item.quantity)}</td>
-                  <td className="icon_close" onClick={() => handleRemoveItem(item.id)}>
-                    <AiOutlineClose />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {cartItems.map((item) => (
+    <tr key={`${item.id}-${item.color}`}>
+      
+      <td className="shopping__cart__item">
+    
+        <h4>{item.name}<td></td></h4>
+      </td>
+      <td>{item.colorName || "Chưa chọn màu"}</td>
+      <td>{format(item.price)}</td>
+      <td>
+        <Quantity
+          quantity={item.quantity}
+          hasAddToCart={false}
+          productId={item.id}
+          color={item.color}
+          onQuantityChange={(newQty) =>
+            handleQuantityChange(item.id, item.color, newQty)
+          }
+        />
+      </td>
+      <td>{format(item.price * item.quantity)}</td>
+      <td
+        className="icon_close"
+        onClick={() => handleRemoveItem(item.id, item.color)}
+      >
+        <AiOutlineClose />
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </div>
 
@@ -86,7 +94,7 @@ const ShoppingCartPage = () => {
                 <li>Số lượng: <span>{totalQuantity}</span></li>
                 <li>Thành tiền: <span>{format(totalPrice)}</span></li>
               </ul>
-              <button type="button" className="button-submit" onClick={()=> navigate(ROUTERS.USER.CHECKOUT)}>Thanh toán</button>
+              <button type="button" className="button-submit" onClick={() => navigate(ROUTERS.USER.CHECKOUT)}>Thanh toán</button>
             </div>
           </div>
         </div>

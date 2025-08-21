@@ -10,7 +10,9 @@ export const ROUTERS = {
     SHOPPING_CART: "/gio-hang",
     PRODUCT_BY_TYPE: "/san-pham/loai/:maloai",
     CHECKOUT: "/thanh-toan",
-    
+    TRACK_ORDER: "/tra-cuu-don-hang",
+    ORDER_DETAIL: "/tra-cuu-don-hang/:id",
+    ABOUT:"/ve-chung-toi",
   },
 
   ADMIN: {
@@ -21,8 +23,10 @@ export const ROUTERS = {
     CATEGORIES: `${ADMIN_PATH}/loai-san-pham`, 
     LOGOUT: `${ADMIN_PATH}/dang-xuat`,
     ADD_PRODUCT: `${ADMIN_PATH}/them-san-pham`,
+    EDIT_PRODUCT: `${ADMIN_PATH}/sua-san-pham`,
     ADD_CATEGORY: `${ADMIN_PATH}/danh-muc`,
     SIZE: `${ADMIN_PATH}/kich-co`,
     COLOR: `${ADMIN_PATH}/mau-sac`,
+    INVENTORY: `${ADMIN_PATH}/ton-kho`,
   },
 };

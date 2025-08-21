@@ -61,6 +61,11 @@
         th {
           padding: 12px 15px;
           text-align: left;
+          border-right: 1px solid #ddd;
+
+          &:last-child {
+            border-right: none;
+          }
         }
       }
 
@@ -74,6 +79,11 @@
 
           td {
             padding: 12px 15px;
+            border-right: 1px solid #ddd;
+
+            &:last-child {
+              border-right: none;
+            }
 
             button {
               padding: 6px 12px;

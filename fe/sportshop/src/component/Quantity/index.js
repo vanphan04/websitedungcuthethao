@@ -8,8 +8,10 @@ const Quantity = ({
   price,
   img,
   quantity = 1,
-   stock = 0,
-  onQuantityChange, // optional callback
+  stock = 0,
+  color,        // mamau
+  colorName,    // tenmau
+  onQuantityChange,
 }) => {
   const [qty, setQty] = useState(quantity);
 
@@ -24,10 +26,12 @@ const Quantity = ({
     if (!hasAddToCart) {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       const updatedCart = cart.map((item) =>
-        item.id === productId ? { ...item, quantity: newQty } : item
+        item.id === productId && item.color === color
+          ? { ...item, quantity: newQty }
+          : item
       );
       localStorage.setItem("cart", JSON.stringify(updatedCart));
-      window.dispatchEvent(new Event("storage")); // Cập nhật các component lắng nghe
+      window.dispatchEvent(new Event("storage"));
     }
 
     if (onQuantityChange) {
@@ -35,38 +39,46 @@ const Quantity = ({
     }
   };
 
-const handleAddToCart = () => {
-  if (qty > stock) {
-    alert("Không đủ hàng trong kho");
-    return;
-  }
-
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  const existingItemIndex = cart.findIndex((item) => item.id === productId);
-  if (existingItemIndex >= 0) {
-    // Kiểm tra tổng quantity sau cộng dồn
-    const newTotal = cart[existingItemIndex].quantity + qty;
-    if (newTotal > stock) {
-      alert("Không đủ hàng trong kho");
+  const handleAddToCart = () => {
+    if (!color || !colorName) {
+      alert("Vui lòng chọn màu sắc trước khi thêm vào giỏ hàng.");
       return;
     }
-    cart[existingItemIndex].quantity = newTotal;
-  } else {
-    cart.push({
-      id: productId,
-      name,
-      price,
-      img,
-      quantity: qty,
-    });
-  }
 
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert("Đã thêm vào giỏ hàng!");
-  window.dispatchEvent(new Event("storage"));
-};
+    if (qty > stock) {
+      alert("Không đủ hàng trong kho.");
+      return;
+    }
 
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const existingItemIndex = cart.findIndex(
+      (item) => item.id === productId && item.color === color
+    );
+
+    if (existingItemIndex >= 0) {
+      const newTotal = cart[existingItemIndex].quantity + qty;
+      if (newTotal > stock) {
+        alert("Không đủ hàng trong kho.");
+        return;
+      }
+      cart[existingItemIndex].quantity = newTotal;
+    } else {
+      cart.push({
+        id: productId,
+        name,
+        price,
+        img,
+        quantity: qty,
+        color,       
+        colorName,   
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Đã thêm vào giỏ hàng!");
+    window.dispatchEvent(new Event("storage"));
+  };
 
   return (
     <div className="quantity-container">
