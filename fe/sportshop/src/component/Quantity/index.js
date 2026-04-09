@@ -1,18 +1,23 @@
 import { memo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { ROUTERS } from "utils/router";
 import "./style.scss";
 
 const Quantity = ({
   hasAddToCart = true,
   productId,
+  variantId,
   name,
   price,
   img,
   quantity = 1,
   stock = 0,
-  color,        // mamau
-  colorName,    // tenmau
+  color,
+  colorName,
+  size,
   onQuantityChange,
 }) => {
+  const navigate = useNavigate();
   const [qty, setQty] = useState(quantity);
 
   useEffect(() => {
@@ -26,9 +31,7 @@ const Quantity = ({
     if (!hasAddToCart) {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       const updatedCart = cart.map((item) =>
-        item.id === productId && item.color === color
-          ? { ...item, quantity: newQty }
-          : item
+        item.variantId === variantId ? { ...item, quantity: newQty } : item,
       );
       localStorage.setItem("cart", JSON.stringify(updatedCart));
       window.dispatchEvent(new Event("storage"));
@@ -40,8 +43,16 @@ const Quantity = ({
   };
 
   const handleAddToCart = () => {
-    if (!color || !colorName) {
-      alert("Vui lòng chọn màu sắc trước khi thêm vào giỏ hàng.");
+    // Kiểm tra user đã đăng nhập
+    const user = localStorage.getItem("user");
+    if (!user) {
+      alert("Vui lòng đăng nhập để mua hàng!");
+      navigate(ROUTERS.USER.LOGIN);
+      return;
+    }
+
+    if (!variantId || !colorName) {
+      alert("Vui lòng chọn phiên bản trước khi thêm vào giỏ hàng.");
       return;
     }
 
@@ -53,7 +64,7 @@ const Quantity = ({
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     const existingItemIndex = cart.findIndex(
-      (item) => item.id === productId && item.color === color
+      (item) => item.variantId === variantId,
     );
 
     if (existingItemIndex >= 0) {
@@ -66,12 +77,14 @@ const Quantity = ({
     } else {
       cart.push({
         id: productId,
+        variantId,
         name,
         price,
         img,
         quantity: qty,
-        color,       
-        colorName,   
+        color,
+        colorName,
+        size,
       });
     }
 
@@ -83,16 +96,24 @@ const Quantity = ({
   return (
     <div className="quantity-container">
       <div className="quantity">
-        <span className="qtybtn" onClick={() => updateQty(qty - 1)}>-</span>
+        <span className="qtybtn" onClick={() => updateQty(qty - 1)}>
+          -
+        </span>
         <input
           type="number"
           value={qty}
           onChange={(e) => updateQty(parseInt(e.target.value) || 1)}
         />
-        <span className="qtybtn" onClick={() => updateQty(qty + 1)}>+</span>
+        <span className="qtybtn" onClick={() => updateQty(qty + 1)}>
+          +
+        </span>
       </div>
       {hasAddToCart && (
-        <button type="button" className="button-submit" onClick={handleAddToCart}>
+        <button
+          type="button"
+          className="button-submit"
+          onClick={handleAddToCart}
+        >
           Thêm giỏ hàng
         </button>
       )}

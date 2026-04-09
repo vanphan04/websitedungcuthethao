@@ -7,7 +7,6 @@ import "./style.scss";
 const ProductAdPage = () => {
   const [products, setProducts] = useState([]);
   const [loaisp, setLoaiSP] = useState([]);
-  const [mausac, setMauSac] = useState([]);
   const [danhmuc, setDanhMuc] = useState([]);
 
   useEffect(() => {
@@ -26,13 +25,11 @@ const ProductAdPage = () => {
 
   const fetchOptions = async () => {
     try {
-      const [loai, ms, dm] = await Promise.all([
+      const [loai, dm] = await Promise.all([
         axios.get("http://localhost:3001/api/loaisanpham"),
-        axios.get("http://localhost:3001/api/mausac"),
         axios.get("http://localhost:3001/api/danhmuc"),
       ]);
       setLoaiSP(loai.data);
-      setMauSac(ms.data);
       setDanhMuc(dm.data);
     } catch (err) {
       console.error("Lỗi khi tải dữ liệu lựa chọn:", err);
@@ -43,14 +40,13 @@ const ProductAdPage = () => {
     if (!window.confirm("Bạn chắc chắn muốn xóa sản phẩm này?")) return;
 
     try {
-  await axios.delete(`http://localhost:3001/api/sanpham/${masp}`);
-  alert("Xóa sản phẩm thành công");
-  fetchProducts(); // cập nhật lại danh sách sản phẩm
-} catch (error) {
-  console.error("Lỗi khi xóa sản phẩm:", error);
-  alert(error.response?.data?.error || "Không thể xóa sản phẩm");
-}
-
+      await axios.delete(`http://localhost:3001/api/sanpham/${masp}`);
+      alert("Xóa sản phẩm thành công");
+      fetchProducts(); // reload lại danh sách
+    } catch (error) {
+      console.error("Lỗi khi xóa sản phẩm:", error);
+      alert(error.response?.data?.error || "Không thể xóa sản phẩm");
+    }
   };
 
   const getTenById = (list, idKey, idValue, nameKey) => {
@@ -62,9 +58,11 @@ const ProductAdPage = () => {
     <div className="product-page">
       <div className="product-ad-page container">
         <h2>Quản lý sản phẩm</h2>
+
         <Link to={ROUTERS.ADMIN.ADD_PRODUCT}>
           <button className="btn-add">+ Thêm sản phẩm mới</button>
         </Link>
+
         <table className="product-table">
           <thead>
             <tr>
@@ -77,6 +75,7 @@ const ProductAdPage = () => {
               <th>Hành động</th>
             </tr>
           </thead>
+
           <tbody>
             {products.map((sp) => (
               <tr key={sp.masp}>
@@ -84,8 +83,15 @@ const ProductAdPage = () => {
                 <td>{sp.tensp}</td>
                 <td>{sp.hinhanh}</td>
                 <td>{sp.gia}</td>
-                <td>{getTenById(loaisp, "maloai", sp.maloai, "tenloai")}</td>
-                <td>{getTenById(danhmuc, "madm", sp.madm, "tendm")}</td>
+
+                <td>
+                  {getTenById(loaisp, "maloai", sp.maloai, "tenloai")}
+                </td>
+
+                <td>
+                  {getTenById(danhmuc, "madm", sp.madm, "tendm")}
+                </td>
+
                 <td>
                   <Link
                     to={{
@@ -96,6 +102,7 @@ const ProductAdPage = () => {
                   >
                     <button>Sửa</button>
                   </Link>
+
                   <button
                     onClick={() => handleDelete(sp.masp)}
                     style={{ marginLeft: 8 }}

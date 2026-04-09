@@ -1,71 +1,54 @@
 @use "sass:map";
 @import "styles/pages/all";
-
 .track-order-page {
-  padding: 20px;
-  max-width: 900px;
-  margin: 0 auto;
+  padding: 50px 0;
 
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
+  .track-order-header {
+    margin-bottom: 24px;
+
+    h2 {
+      margin-bottom: 8px;
+      font-size: 24px;
+    }
+
+    p {
+      color: map.get($theme-colors, "normal-text");
+    }
   }
 
-  .search-form {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 30px;
+  .track-order-loading,
+  .track-order-error,
+  .track-order-empty {
+    padding: 24px;
+    border: 1px solid #ececec;
+    border-radius: 8px;
+    text-align: center;
+    color: map.get($theme-colors, "nomal-text");
+  }
 
-    input {
-      width: 250px;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+  .track-order-table-wrap {
+    overflow-x: auto;
+  }
+
+  .track-order-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 640px;
+
+    th,
+    td {
+      padding: 14px 12px;
+      border: 1px solid #f0f0f0;
+      text-align: left;
     }
 
     button {
-      padding: 8px 16px;
-      cursor: pointer;
-      background-color: map.get($theme-colors, "main");
-      color: white;
-      border: none;
+      border: 1px solid map.get($theme-colors, "main");
+      background: transparent;
+      color: map.get($theme-colors, "main");
       border-radius: 4px;
-    }
-  }
-
-  .error {
-    color: red;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
-  .orders-table {
-    overflow-x: auto;
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-
-      th, td {
-        padding: 12px;
-        border: 1px solid #ddd;
-        text-align: center;
-      }
-
-      th {
-        background-color: #f2f2f2;
-      }
-
-      button {
-        padding: 6px 12px;
-        background-color: map.get($theme-colors, "main");
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-
-      }
+      padding: 8px 14px;
+      cursor: pointer;
     }
   }
 }

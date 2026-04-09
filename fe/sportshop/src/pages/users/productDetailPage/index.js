@@ -16,17 +16,21 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
-  const [selectedColor, setSelectedColor] = useState("");
+  const [variants, setVariants] = useState([]);
   const [colors, setColors] = useState([]);
+  const [sizes, setSizes] = useState([]);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedVariantId, setSelectedVariantId] = useState("");
   const [stock, setStock] = useState(0);
-  const [selectedColorName, setSelectedColorName] = useState("");
+  const [price, setPrice] = useState(0);
 
-  // Lấy thông tin sản phẩm + danh sách sản phẩm liên quan
   useEffect(() => {
     axios
       .get(`http://localhost:3001/api/sanpham/${id}`)
       .then((res) => {
         setProduct(res.data);
+        setPrice(res.data.gia);
       })
       .catch((err) => console.error("Lỗi khi tải chi tiết:", err));
 
@@ -42,37 +46,66 @@ const ProductDetailPage = () => {
     });
 
     axios
-      .get(`http://localhost:3001/api/sanpham/${id}/mausac`)
+      .get(`http://localhost:3001/api/tonkho`)
       .then((res) => {
-        setColors(res.data);
+        const productVariants = res.data.filter((v) => v.masp === parseInt(id));
+        setVariants(productVariants);
+        const uniqueColors = [...new Set(productVariants.map((v) => v.mamau))];
+        setColors(uniqueColors);
+        if (productVariants.length > 0) {
+          setSelectedColor(productVariants[0].mamau);
+          const sizesForFirstColor = [
+            ...new Set(
+              productVariants
+                .filter((v) => v.mamau === productVariants[0].mamau)
+                .map((v) => v.size)
+                .filter((s) => s),
+            ),
+          ];
+          setSizes(sizesForFirstColor);
+          setSelectedSize(productVariants[0].size || "");
+        }
       })
-      .catch((err) => console.error("Lỗi khi tải màu sắc:", err));
+      .catch((err) => console.error("Lỗi khi tải variants:", err));
   }, [id]);
 
-  // Khi chọn màu, lấy số lượng và tên màu
   useEffect(() => {
     if (selectedColor) {
-      const selected = colors.find((mau) => mau.mamau.toString() === selectedColor);
+      const sizesForColor = [
+        ...new Set(
+          variants
+            .filter((v) => v.mamau === selectedColor)
+            .map((v) => v.size)
+            .filter((s) => s),
+        ),
+      ];
+      setSizes(sizesForColor);
 
-      setSelectedColorName(selected?.tenmau || "");
-
-      axios
-        .get(
-          `http://localhost:3001/api/sanpham/${id}/stock?mamau=${selectedColor}`
-        )
-        .then((res) => {
-          const qty = res.data.soluong || 0;
-          setStock(qty);
-        })
-        .catch((err) => {
-          console.error("Lỗi khi tải tồn kho:", err);
-          setStock(0);
-        });
-    } else {
-      setStock(0);
-      setSelectedColorName("");
+      if (sizesForColor.length > 0 && !sizesForColor.includes(selectedSize)) {
+        setSelectedSize(sizesForColor[0]);
+      } else if (sizesForColor.length === 0) {
+        setSelectedSize("");
+      }
     }
-  }, [selectedColor, colors, id]);
+  }, [selectedColor, variants, selectedSize]);
+
+  useEffect(() => {
+    const selected = variants.find(
+      (variant) =>
+        variant.mamau === selectedColor &&
+        (variant.size || "") === selectedSize,
+    );
+
+    if (selected) {
+      setSelectedVariantId(selected.variant_id);
+      setStock(selected.soluong || 0);
+      setPrice(selected.price || product?.gia || 0);
+    } else {
+      setSelectedVariantId("");
+      setStock(0);
+      setPrice(product?.gia || 0);
+    }
+  }, [selectedColor, selectedSize, variants, product]);
 
   if (!product) return <div>Đang tải...</div>;
 
@@ -86,7 +119,7 @@ const ProductDetailPage = () => {
           </div>
           <div className="col-lg-6 product__detail__text">
             <h2>{product.tensp}</h2>
-            <h3>{format(product.gia)}</h3>
+            <h3>{format(price)}</h3>
             <p>{product.mota}</p>
 
             <div className="product__color__choose">
@@ -97,22 +130,47 @@ const ProductDetailPage = () => {
                 className="form-control mt-2 mb-2"
               >
                 <option value="">-- Chọn màu --</option>
-                {colors.map((mau) => (
-                  <option key={mau.mamau} value={mau.mamau}>
-                    {mau.tenmau}
-                  </option>
-                ))}
+                {colors.map((color) => {
+                  const variant = variants.find((v) => v.mamau === color);
+                  return (
+                    <option key={color} value={color}>
+                      {variant?.tenmau || color}
+                    </option>
+                  );
+                })}
               </select>
             </div>
 
+            {sizes.length > 0 && (
+              <div className="product__size__choose">
+                <label>Size:</label>
+                <select
+                  value={selectedSize}
+                  onChange={(e) => setSelectedSize(e.target.value)}
+                  className="form-control mt-2 mb-2"
+                >
+                  <option value="">-- Chọn size --</option>
+                  {sizes.map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
             <Quantity
               productId={product.masp}
+              variantId={selectedVariantId}
               name={product.tensp}
-              price={product.gia}
+              price={price}
               img={product.hinhanh}
               stock={stock}
               color={selectedColor}
-              colorName={selectedColorName}
+              colorName={
+                variants.find((v) => v.mamau === selectedColor)?.tenmau || ""
+              }
+              size={selectedSize}
             />
 
             <ul>
@@ -124,8 +182,17 @@ const ProductDetailPage = () => {
                 <b>Số lượng:</b> <span>{stock}</span>
               </li>
               <li>
-                <b>Màu sắc:</b> <span>{selectedColorName || "Chưa chọn"}</span>
+                <b>Màu sắc:</b>{" "}
+                <span>
+                  {variants.find((v) => v.mamau === selectedColor)?.tenmau ||
+                    "Chưa chọn"}
+                </span>
               </li>
+              {selectedSize && (
+                <li>
+                  <b>Size:</b> <span>{selectedSize}</span>
+                </li>
+              )}
               <li>
                 <b>Chia sẻ:</b>{" "}
                 <span>

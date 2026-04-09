@@ -47,7 +47,9 @@ const CheckoutPage = () => {
 
     const phoneRegex = /^(0[0-9]{9})$/;
     if (!phoneRegex.test(form.sdt)) {
-      alert("Số điện thoại không hợp lệ. Vui lòng nhập đúng 10 số và bắt đầu bằng 0.");
+      alert(
+        "Số điện thoại không hợp lệ. Vui lòng nhập đúng 10 số và bắt đầu bằng 0.",
+      );
       return false;
     }
 
@@ -58,8 +60,8 @@ const CheckoutPage = () => {
     }
 
     for (const item of cart) {
-      if (!item.color) {
-        alert(`Thiếu mã màu cho sản phẩm "${item.name}"`);
+      if (!item.variantId) {
+        alert(`Vui lòng chọn phiên bản cho sản phẩm "${item.name}"`);
         return false;
       }
     }
@@ -76,7 +78,9 @@ const CheckoutPage = () => {
     try {
       const cartForBackend = cart.map((item) => ({
         masp: item.id,
+        variant_id: item.variantId,
         mamau: item.color,
+        size: item.size,
         soluong: item.quantity,
         gia: item.price,
       }));
@@ -180,7 +184,9 @@ const CheckoutPage = () => {
                     <span>
                       {item.name} – Màu: <b>{item.colorName}</b>
                     </span>
-                    <b>{format(item.price)} ({item.quantity})</b>
+                    <b>
+                      {format(item.price)} ({item.quantity})
+                    </b>
                   </li>
                 ))}
                 <li className="checkout__order__subtotal">

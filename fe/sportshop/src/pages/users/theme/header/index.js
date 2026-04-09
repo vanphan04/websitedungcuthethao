@@ -1,10 +1,10 @@
 import axios from "axios";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import {
   AiOutlineMail,
   AiOutlineMenu,
   AiOutlinePhone,
-  AiOutlineShoppingCart
+  AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { format } from "utils/format";
@@ -20,23 +20,30 @@ const Header = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [loaiSanPham, setLoaiSanPham] = useState([]);
   const [danhMucSanPham, setDanhMucSanPham] = useState([]);
+  const [user, setUser] = useState(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const [menus] = useState([
-    { name: "Trang chủ" , path: ROUTERS.USER.HOME},
+    { name: "Trang chủ", path: ROUTERS.USER.HOME },
     {
       name: "Sản phẩm",
       path: "",
       isShowSubmenu: false,
       child: [],
-      style: { width: "100%", display: "flex", flexWrap: "wrap", color: "#000" },
+      style: {
+        width: "100%",
+        display: "flex",
+        flexWrap: "wrap",
+        color: "#000",
+      },
     },
-    { name: "Đơn hàng", path: ROUTERS.USER.TRACK_ORDER },
     { name: "Tin tức", path: "" },
     { name: "Liên hệ", path: "" },
     { name: "ABOUT", path: ROUTERS.USER.ABOUT },
   ]);
 
   const [cartCount, setCartCount] = useState(0);
+  const userMenuRef = useRef(null);
 
   useEffect(() => {
     const isHomePage = location.pathname.length <= 1;
@@ -45,12 +52,60 @@ const Header = () => {
   }, [location]);
 
   useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        showUserMenu &&
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target)
+      ) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showUserMenu]);
+
+  // Check user login status
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (err) {
+        console.error("Error parsing user data:", err);
+        localStorage.removeItem("user");
+      }
+    }
+
+    const handleStorageChange = () => {
+      const updatedUserData = localStorage.getItem("user");
+      if (updatedUserData) {
+        try {
+          setUser(JSON.parse(updatedUserData));
+        } catch (err) {
+          console.error("Error parsing user data:", err);
+        }
+      } else {
+        setUser(null);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  useEffect(() => {
     const updateCartCount = () => {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
       const totalPrice = cart.reduce(
         (sum, item) => sum + item.price * item.quantity,
-        0
+        0,
       );
       setCartCount(totalQuantity);
       setCartTotal(totalPrice);
@@ -98,6 +153,14 @@ const Header = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    setShowUserMenu(false);
+    navigate(ROUTERS.USER.HOME);
+    alert("Đã đăng xuất!");
+  };
+
   return (
     <>
       <div className="header__top">
@@ -114,9 +177,48 @@ const Header = () => {
             </div>
             <div className="col-6 header__top_right">
               <ul>
-                <li onClick={() => navigate(ROUTERS.ADMIN.LOGIN)}>
-                  <span>Đăng nhập</span>
-                </li>
+                {!user ? (
+                  <>
+                    <li onClick={() => navigate(ROUTERS.USER.LOGIN)}>
+                      <span>Đăng nhập</span>
+                    </li>
+                    <li onClick={() => navigate(ROUTERS.USER.SIGNUP)}>
+                      <span>Đăng ký</span>
+                    </li>
+                  </>
+                ) : (
+                  <li
+                    ref={userMenuRef}
+                    className={`user-menu-trigger ${showUserMenu ? "active" : ""}`}
+                    onClick={() => setShowUserMenu((prev) => !prev)}
+                  >
+                    <span>👤 {user.tenkh || "Tài khoản"}</span>
+                    <div className="user-menu-dropdown">
+                      <ul>
+                        <li>
+                          <button
+                            onClick={() => {
+                              setShowUserMenu(false);
+                              navigate(ROUTERS.USER.PROFILE);
+                            }}
+                          >
+                            Hồ sơ
+                          </button>
+                        </li>
+                        <li>
+                          <button
+                            onClick={() => {
+                              setShowUserMenu(false);
+                              handleLogout();
+                            }}
+                          >
+                            Đăng xuất
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                )}
               </ul>
             </div>
           </div>

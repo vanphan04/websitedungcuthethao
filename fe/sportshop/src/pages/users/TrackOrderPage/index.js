@@ -1,95 +1,130 @@
-import React, { useState } from "react";
+import { memo, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { format } from "utils/format";
+import { ROUTERS } from "utils/router";
 import "./style.scss";
 
 const TrackOrderPage = () => {
-  const [sdt, setSdt] = useState("");
-  const [orders, setOrders] = useState([]);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-const handleSearch = async (e) => {
-  e.preventDefault();
-  if (!sdt.trim()) {
-    setError("Vui lòng nhập số điện thoại");
-    return;
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (err) {
+        console.error("Lỗi đọc user:", err);
+      }
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!user?.sdt) {
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      setError(null);
+
+      try {
+        const res = await axios.get(
+          `http://localhost:3001/api/hoadon/sdt/${encodeURIComponent(user.sdt)}`,
+        );
+        setOrders(res.data || []);
+      } catch (err) {
+        console.error("Lỗi khi tải đơn hàng:", err);
+        setError("Không thể tải đơn hàng. Vui lòng thử lại sau.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [user?.sdt]);
+
+  if (!user) {
+    return (
+      <div className="track-order-page">
+        <div className="container">
+          <div className="track-order-empty">
+            <h2>Bạn cần đăng nhập để xem đơn hàng của mình</h2>
+            <button onClick={() => navigate(ROUTERS.USER.LOGIN)}>
+              Đăng nhập ngay
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
-
-  try {
-    const res = await axios.get(`http://localhost:3001/api/hoadon/sdt/${sdt}`);
-
-    // Sắp xếp từ mới đến cũ theo ngày xuất
-    const sortedOrders = res.data.sort((a, b) => new Date(b.ngayxuat) - new Date(a.ngayxuat));
-
-    setOrders(sortedOrders);
-    setError("");
-  } catch (err) {
-    setOrders([]);
-    setError("Không tìm thấy đơn hàng với số điện thoại này");
-  }
-};
-
-
-
-  const formatCurrency = (value) =>
-    new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(value);
-
-  const formatDate = (dateStr) =>
-    new Date(dateStr).toLocaleDateString("vi-VN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
 
   return (
     <div className="track-order-page">
-      <h2>Tra cứu đơn hàng</h2>
-      <form onSubmit={handleSearch} className="search-form">
-        <input
-          type="text"
-          placeholder="Nhập số điện thoại"
-          value={sdt}
-          onChange={(e) => setSdt(e.target.value)}
-        />
-        <button type="submit">Tìm kiếm</button>
-      </form>
-      {error && <p className="error">{error}</p>}
-
-      {orders.length > 0 && (
-        <div className="orders-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Mã đơn</th>
-                <th>Ngày xuất</th>
-                <th>Tổng tiền</th>
-                <th>PTTT</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order.mahd}>
-                  <td>{order.mahd}</td>
-                  <td>{formatDate(order.ngayxuat)}</td>
-                  <td>{formatCurrency(order.tongtien)}</td>
-                  <td>{order.pttt}</td>
-                  <td><button onClick={() => navigate(`/tra-cuu-don-hang/${order.mahd}`)}>
-  Xem chi tiết
-</button>
-</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="container">
+        <div className="track-order-header">
+          <h2>Đơn hàng của {user.tenkh || user.name || "bạn"}</h2>
+          <p>Số điện thoại: {user.sdt || "Chưa có"}</p>
         </div>
-      )}
+
+        {loading ? (
+          <div className="track-order-loading">Đang tải đơn hàng...</div>
+        ) : error ? (
+          <div className="track-order-error">{error}</div>
+        ) : orders.length === 0 ? (
+          <div className="track-order-empty">
+            Hiện tại bạn chưa có đơn hàng nào.
+          </div>
+        ) : (
+          <div className="track-order-table-wrap">
+            <table className="track-order-table">
+              <thead>
+                <tr>
+                  <th>Mã đơn</th>
+                  <th>Ngày</th>
+                  <th>Trạng thái</th>
+                  <th>Tổng tiền</th>
+                  <th>Chi tiết</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order) => (
+                  <tr key={order.mahd}>
+                    <td>{order.mahd}</td>
+                    <td>
+                      {new Date(order.ngayxuat).toLocaleDateString("vi-VN")}
+                    </td>
+                    <td>{order.trangthai}</td>
+                    <td>{format(order.tongtien)}</td>
+                    <td>
+                      <button
+                        onClick={() =>
+                          navigate(
+                            ROUTERS.USER.ORDER_DETAIL.replace(
+                              ":id",
+                              order.mahd,
+                            ),
+                          )
+                        }
+                      >
+                        Xem
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default TrackOrderPage;
+export default memo(TrackOrderPage);

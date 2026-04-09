@@ -3,6 +3,8 @@ export const ADMIN_PATH = "/quan-tri"
 export const ROUTERS = {
   USER: {
     HOME: "/",
+    LOGIN: "/dang-nhap",
+    SIGNUP: "/dang-ky",
     PROFILE: "/profile",
     PRODUCTS: "/san-pham",
     PRODUCTS_BY_CATEGORY: "/san-pham/danh-muc/:madm",

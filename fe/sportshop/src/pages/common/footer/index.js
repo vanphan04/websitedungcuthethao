@@ -2,6 +2,7 @@ import { memo } from "react";
 import "./style.scss";
 import { Link } from "react-router-dom";
 import { AiOutlineFacebook, AiOutlineInstagram } from "react-icons/ai";
+import { ROUTERS } from "utils/router";
 
 const Footer = () => {
     return <footer className="footer">
@@ -40,6 +41,11 @@ const Footer = () => {
                             </li>
                             <li>
                                 <Link to="">danh sách yêu thích</Link>
+                            </li>
+                            <li style={{ borderTop: "1px solid #ddd", marginTop: "10px", paddingTop: "10px" }}>
+                                <Link to={ROUTERS.ADMIN.LOGIN} style={{ color: "#FF6B35", fontWeight: "600" }}>
+                                    🔐 Đăng nhập Admin
+                                </Link>
                             </li>
                         </ul>
                     </div>
