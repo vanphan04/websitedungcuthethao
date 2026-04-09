@@ -1,3 +1,144 @@
 @use "sass:map";
 @import "styles/pages/all";
 
+.signup-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 250px);
+  padding: 40px 20px;
+  background: white;
+
+  .signup-container {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .signup-box {
+    background: white;
+    padding: 50px 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.5s ease-out;
+  }
+
+  .signup-title {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .signup-subtitle {
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+
+  .signup-form {
+    .form-group {
+      margin-bottom: 22px;
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+        font-size: 14px;
+      }
+
+      input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+
+        &:focus {
+          outline: none;
+          border-color: #EE7600;
+          box-shadow: 0 0 0 4px rgba(238, 118, 0, 0.1);
+          background-color: #fff9f3;
+        }
+
+        &::placeholder {
+          color: #aaa;
+        }
+      }
+    }
+  }
+
+  .btn-signup {
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #EE7600 0%, #ff9933 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(238, 118, 0, 0.4);
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(238, 118, 0, 0.6);
+    }
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+  }
+
+  .signup-footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-size: 14px;
+
+    a {
+      color: #EE7600;
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+/* Animation giống login */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .signup-page {
+    padding: 20px 15px;
+
+    .signup-box {
+      padding: 30px 20px;
+    }
+
+    .signup-title {
+      font-size: 24px;
+    }
+  }
+}

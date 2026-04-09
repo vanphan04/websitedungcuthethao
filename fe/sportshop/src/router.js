@@ -21,10 +21,14 @@ import DmPage from "pages/admin/dmPage";
 import ColorPage from "pages/admin/colorPage";
 import InventoryPage from "pages/admin/inventoryPage"; // ✅ Trang tồn kho
 import EditProductPage from "pages/admin/editProductPage";
+import LoginPage from "pages/users/loginPage";
+import SignupPage from "pages/users/signupPage";
 
 const renderUserRouter = () => {
   const userRouters = [
     { path: ROUTERS.USER.HOME, component: <HomePage /> },
+    { path: ROUTERS.USER.LOGIN, component: <LoginPage /> },
+    { path: ROUTERS.USER.SIGNUP, component: <SignupPage /> },
     { path: ROUTERS.USER.PROFILE, component: <ProfilePage /> },
     { path: ROUTERS.USER.PRODUCTS, component: <ProductsPage /> },
     { path: ROUTERS.USER.PRODUCTS_BY_CATEGORY, component: <ProductsPage /> },
@@ -60,7 +64,7 @@ const renderAdminRouter = () => {
     { path: ROUTERS.ADMIN.ADD_PRODUCT, component: <AddProductPage /> },
     { path: ROUTERS.ADMIN.EDIT_PRODUCT, component: <EditProductPage /> },
     { path: ROUTERS.ADMIN.COLOR, component: <ColorPage /> },
-    { path: ROUTERS.ADMIN.INVENTORY, component: <InventoryPage /> }, 
+    { path: ROUTERS.ADMIN.INVENTORY, component: <InventoryPage /> },
   ];
 
   return (
