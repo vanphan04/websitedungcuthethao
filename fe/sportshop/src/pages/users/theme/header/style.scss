@@ -36,7 +36,9 @@ $bannerImg: "/assets/users/images/hero/banner.jpg";
     }
     }  
 }
-
+.header__top_right ul li {
+    cursor: pointer; 
+}
 .header__top_right{  
     display: flex;
     justify-content: flex-end;
@@ -51,6 +53,8 @@ $bannerImg: "/assets/users/images/hero/banner.jpg";
             font-size: 14px;
             display: inline-block;
             color: map.get($theme-colors, "nomal-text");
+            cursor: pointer !important;
+
         }
 
         li:last-child{
@@ -60,6 +64,7 @@ $bannerImg: "/assets/users/images/hero/banner.jpg";
         span{
             font-size: 14px;
             margin-left: 2px;
+            cursor: pointer;
         }
         }
 
@@ -90,6 +95,7 @@ $bannerImg: "/assets/users/images/hero/banner.jpg";
                 transition: all 0.3s;
                 padding: 5px 0;
                 display: block;
+            
             }
             
         }
@@ -212,7 +218,7 @@ $bannerImg: "/assets/users/images/hero/banner.jpg";
             }
             &:hover{
                 background: #f7ffff;
-
+                cursor: pointer;
                 a{
                     color: map.get($theme-colors,"main");
                 }

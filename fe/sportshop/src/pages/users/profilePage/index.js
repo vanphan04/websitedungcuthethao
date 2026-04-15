@@ -234,7 +234,6 @@ const ProfilePage = () => {
             <div className="profile-orders__header">
               <div>
                 <h2>Đơn hàng gần nhất</h2>
-                <p>Hiển thị tối đa 5 đơn hàng mới nhất.</p>
               </div>
             </div>
 

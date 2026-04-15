@@ -39,7 +39,6 @@ const Header = () => {
     },
     { name: "Tin tức", path: "" },
     { name: "Liên hệ", path: "" },
-    { name: "ABOUT", path: ROUTERS.USER.ABOUT },
   ]);
 
   const [cartCount, setCartCount] = useState(0);
