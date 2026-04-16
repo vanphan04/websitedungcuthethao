@@ -749,10 +749,6 @@ app.get("/api/tonkho", (req, res) => {
       console.error("Lỗi khi truy vấn tồn kho:", err);
       return res.status(500).json({ error: "Lỗi máy chủ" });
     }
-
-    // 👉 BỎ Ở ĐÂY
-    console.log("RESULT TONKHO:", result);
-
     res.json(result);
   });
 });
@@ -896,7 +892,6 @@ app.get("/api/hoadon/sdt/:sdt", async (req, res) => {
 // Lấy chi tiết đơn hàng
 app.get("/api/hoadon/:id/chitiet", async (req, res) => {
   const { id } = req.params;
-  console.log("ID:", id);
 
   try {
     const conn = db.promise();
